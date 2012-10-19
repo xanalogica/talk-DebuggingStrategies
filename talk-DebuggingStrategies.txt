@@ -1,0 +1,524 @@
+.. include:: <s5defs.txt>
+
+===========================================
+ Debugging Strategies: A Guided Discussion
+===========================================
+
+:Author: Jeff Rush <jeff@taupro.com>
+:Copyright: 2012 Tau Productions Inc.
+:License: Creative Commons Attribution-ShareAlike 3.0
+:Duration: 25-minutes
+:Difficulty: Beginner
+:Keywords: debugging
+
+A discussion of possible strategies used to debug certain kinds of problems.
+
+http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/
+
+.. |bullet| unicode:: U+02022
+.. footer:: Tau Productions Inc. |bullet| 2012
+
+..
+
+   Given at:
+
+   2012/09/15 PyTexas Regional Conference in College Station, TX
+
+
+Overview
+========
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + not in-depth about any particular tool
+      + more about philosophy and approach
+
+      ..
+
+      + Tools in Your Arsenal
+      + Causes of Bugs
+      + The Traceback is Your Friend
+      + Getting Control When Something Goes Wrong
+      + A Taxonomy of Bugs and Approaches
+
+
+Tools in Your Arsenal
+=====================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + *print* statement
+      + Python Debugger (pdb)
+
+        .. class:: incremental
+
+           + starting in it
+           + dropping into it at a point
+           + dropping into it when a problem occurs
+
+      ..
+
+      + *logging* module
+      + unit and functional tests
+      + Python Profiler
+      + the Python prompt
+
+
+What are the Causes of Bugs?
+============================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + misunderstanding, of the API or requirements
+      + source code got out of sync
+      + assumed something about environment
+      + ???
+
+
+Resource Management a Major Cause of Bugs
+=========================================
+
+.. container:: slide-display
+
+   Programs are more than their inputs!
+
+   .. class:: incremental
+
+      + disk resources
+
+        .. class:: incremental
+
+           + out of space, storage or directory
+           + files in-use/locked
+           + insufficient permissions
+
+      + compute resources
+
+        .. class:: incremental
+
+           + out of memory, swapping
+           + out of threads
+           + excessive concurrency usage
+
+      + network resources
+
+        .. class:: incremental
+
+           + out of sockets
+           + DNS, network topology
+           + restricted lower ports
+           + packet chunking
+           + changes in network I/O behavior
+
+
+The Traceback is Your Friend
+============================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      ::
+
+        Traceback (most recent call last):
+        File "c:\twisted\internet\selectreactor.py", line 146, in _doReadOrWrite
+            why = getattr(selectable, method)()
+
+      ::
+
+        File "c:\twisted\internet\tcp.py", line 463, in doRead
+            return self.protocol.dataReceived(data)
+        File "c:\twisted\protocols\basic.py", line 239, in dataReceived
+            return self.rawDataReceived(data)
+        File "c:\twisted\words\protocols\msn.py", line 676 in rawDataReceived
+            self.gotMessage(m)
+        File "c:\twisted\words\protocols\msn.py", line 699, in gotMessage
+            raise ValueError("A valid state must be passed in.")
+
+      ::
+
+        ValueError: A valid state must be passed in.
+
+      + true cause not always last
+      + pathnames may be wrong for .pyc files
+
+
+Getting Control When Something Goes Wrong
+=========================================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      ::
+
+        $ python -i yourpgm.py
+        >>>
+
+      ::
+
+        import code
+        code.interact(local=locals())
+
+      ::
+
+        try:
+            main()  # your program here
+        except:
+            import pdb
+            pdb.post_mortem()
+
+      ::
+
+            import pdb; pdb.set_trace()
+            # your suspect code
+
+
+A Taxonomy of Bugs
+==================
+
+.. container:: slide-display
+
+   The bug that ...
+
+   .. class:: incremental
+
+      + always happens
+      + sometimes happens
+      + only happens for someone else
+      + only happens under load
+      + makes a program take too long
+
+
+The Bug that Always Happens
+===========================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + the print statement
+      + good logging
+      + single-stepping/breakpointing via pdb
+
+
+The Bug that Sometimes Happens
+==============================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + reconsider your design assumptions
+      + especially non-deterministic factors
+        like packet chunking, network traffic
+
+      ..
+
+      + logging
+      + "short-term" logging for rarely occurring
+
+
+The Destination versus Knowing the Path
+=======================================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + Unit Tests tell you **Something Went Wrong**
+
+        A -> B (but no knowledge of path in-btw)
+
+      ..
+
+      + Logging Tests tell you **Where It Went Wrong**
+
+        A -> B (but record of exec path along the way)
+
+
+The Bug that Happens Only for Someone Else
+==========================================
+
+.. container:: slide-display
+
+   + (timezone story)
+
+   .. class:: incremental
+
+      + reconsider your design assumptions
+
+        + time-of-day differences
+        + network **differences**
+        + more limited storage resources
+        + disk permission **differences**
+        + concurrency assumptions (stealth apps)
+        + software installation differences
+
+      ::
+
+        $ python -v yourpgm.py
+
+        (shows where you are importing stuff from)
+
+      ..
+
+      + logging very important (because you are not there)
+      + *especially* of your environment
+
+
+The Bug that Happens Only Under Load
+====================================
+
+.. container:: slide-display
+
+   .. class:: incremental
+
+      + reconsider your assumptions re **deallocation**
+
+        .. class:: incremental
+
+           + failure to collect memory garbage
+           + excessive nesting of stack frames
+           + delayed temporary file deletion
+           + exhaustion of threads or locks
+
+           ..
+
+           + changes in I/O behavior (esp network)
+
+      ..
+
+      + use realistic unit tests
+
+
+The Bug that Makes a Program Take Too Long
+==========================================
+
+.. container:: slide-display
+
+   + besides the obvious use of a Python Profiler ...
+
+   .. class:: incremental
+
+      ::
+
+        import signal
+
+        def interrupt_handler(signum, frame):
+            import pdb
+            pdb.set_trace()
+
+        # (on OSX, use signal.SIGINT instead of SIGUSR1)
+        signal.signal(signal.SIGUSR1, interrupt_handler)
+
+        main()
+
+      ::
+
+        signal.signal(signal.SIGALRM, interrupt_handler)
+
+        signal.alarm(30) # 30-seconds
+        do_something_timecritical()
+        signal.alarm(0)  # Disable the alarm
+
+
+Conclusion
+==========
+
+.. container:: slide-display
+
+   + the perfect bug report?
+   + the worst bug report?
+
+   .. class:: huge
+
+      Questions?
+
+      http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/
+
+.. class:: incremental
+
+   print "fffff %s" % (a, b, c, d)  # expensive
+   needs to be removed; make introduce bugs
+   unfilterable, all mixed together
+   can't use "short-term" logging very well  (need to show a code example of this)
+
+   python -m pdb program.py
+
+   formulate hypothese
+   use breakpoints/prints/reruns to confirm (risk of rerun showing false fix)
+
+   consider using an animated/incremental flowchart to show decision process
+
+   when debugging, get more people involved sometimes - they see the bug before you
+
+   non-interactive pgms - current approaches work well
+   interactive pgms
+     too much logging
+     breakpoints would stop shared/async/realtime code!
+     risk: the act of inspecting changes the bug
+
+   new class of bug: fails when run at full-speed, works when single-stepped
+
+   otrace - saves snapshots ot object states
+     provides a shell to navigate (and modify?) virtual filesystem
+
+   dynamic decoration versus static decoration
+
+   want to trap the creation of specific Exceptions,
+     then report who/where it is happening
+
+   (need to colorize my Python source)
+
+   (need to check if my immutable example should use __new__ or __init__)
+
+   (need graphic of call stack for traceback example)
+
+   (need to cover appropriate use of asserts)
+
+   otrace
+     a tracing tool for debugging interactive programs
+     a console/dashboard for monitoring production servers
+     a teaching tool for exploring innards
+     a code patching tool for unit testing
+
+     works with GNU screen utility for detached processes
+
+     not a back-in-time debugger
+     similar to OS tracing utility DTrace
+     no performance penalty until enabled
+
+
+     Talk - Designing Your Code for Easy Debugging
+
+
+     Exercise - show buggy code, ask how to find the bug
+
+     use of [0] instead of [0:]
+     use of positional instead of keyword arg
+     use of a single element tuple, resulting in a non-tuple
+     use of an abstract method
+     iterating over a list being modified
+
+
+
+get_x, set_x
+
+for i in range(5)
+
+if x, if x == True, if x is not None,
+
+if is_blank  ==>   if blank:
+
+use default_dict
+switch map() to list comprehension or generator
+use tuple comparison instead of nested ifs
+avoid excessive use of backslash line continuations
+use tuple unpacking instead of subscripting
+
+argue: library vs app vs framework, what are the differences?
+  library never prints but should log
+  app may print and should configure logging
+
+talk: sorting
+talk: searching
+talk: serialization
+talk: binding
+talk: splitting strings
+talk: joining strings
+idiom: iterating over lines
+talk: what is 'refactoring'
+talk: how to give knobs or pluggable points to an algorithm
+talk: when imperative programming falls short
+talk: CS101 graphs
+
+
+compare set of documents in ZODB with set in VCS
+  adjust ZODB to represent what is in VCS
+  document deletions
+  document additions
+
+  passes it to a parser based on file extension
+    passes it thru a stack of indexers
+    and stores what gets returned persistently
+
+  mapping of URLs to content in the ZODB
+    ???
+    security controls over access
+
+  adapters to present content in various formats
+
+  RSS/ATOM feed generators
+  - filtered by topic
+  - ordered by date
+  - triggered by document-added/updated events
+
+  contributions by members
+  - comments
+  - ranking
+  - analytics
+
+layer a more interactive chat UI for guided teaching
+
+layer a xanathon UI for document authoring
+
+github:tswast
+
+githug: a github appreciation forum?
+
+
+spark talks: a URL and a one-sentence abstract, submitted by web
+
+
+idiom: be sure to re.compile outside the loop
+
+lightning talk approaches:
+  ten things I like/hate about X
+
+need: wristlet laser pointer
+  able to draw shapes over screen
+need: wired to wireless dongle, for easily connecting to devices
+
+gevent: a greenlet-based async library
+
+auto-generated knowledge tree
+  encompassed-by link
+  see-also link
+ZCatalog versus BTree
+
+Use the ZODB to store the optimized representation but use the flat textfiles as the authority
+
+if __name == "__main__"
+  should contain only log setup and arg parsing
+    but not do actual work; reasons are so code
+    can be reused in other places in other ways
+
+    never store two things in one code block that
+      might be run separately in another scenario
+
+  should you ever call sys.exit or just fall off the end?
+
+
+remember: the main module is NOT compiled,
+  so if it contains a big pgm it will start slowly
+
+
+
+
+checkout: flashbake for automatic Git commits
+
+Kyle Scarmardo - sponsor from whom I borrowed the USB cable
+
+
+..
+   XXLocal Variables:
+   mode: rst
+   mode: outline-minor
+   End:
