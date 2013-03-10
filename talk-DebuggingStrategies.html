@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
+<meta name="version" content="S5 1.1" />
+<title>Debugging Strategies: A Guided Discussion</title>
+<meta name="author" content="Jeff Rush &lt;jeff&#64;taupro.com&gt;" />
+<meta name="copyright" content="2012 Tau Productions Inc." />
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7434 2012-05-11 21:06:27Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { /* line numbers */
+  color: grey;
+}
+
+.code {
+  background-color: #eeeeee
+}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="visible" />
+<!-- style sheet links -->
+<script src="/home/caster/themes/talk-dfwuug/slides.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/slides.css"
+      type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/outline.css"
+      type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/print.css"
+      type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/opera.css"
+      type="text/css" media="projection" id="operaFix" />
+</head>
+<body>
+<div class="layout">
+<div id="controls"></div>
+<div id="currentSlide"></div>
+<div id="header">
+
+</div>
+<div id="footer">
+<h1>Debugging Strategies: A Guided Discussion</h1>
+<h2>Tau Productions Inc. • 2012</h2>
+</div>
+</div>
+<div class="presentation">
+<div class="slide" id="slide0">
+<h1 class="title">Debugging Strategies: A Guided Discussion</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Jeff Rush &lt;<a class="reference external" href="mailto:jeff&#64;taupro.com">jeff&#64;taupro.com</a>&gt;</td></tr>
+<tr><th class="docinfo-name">Copyright:</th>
+<td>2012 Tau Productions Inc.</td></tr>
+<tr class="field"><th class="docinfo-name">License:</th><td class="field-body">Creative Commons Attribution-ShareAlike 3.0</td>
+</tr>
+<tr class="field"><th class="docinfo-name">Duration:</th><td class="field-body">25-minutes</td>
+</tr>
+<tr class="field"><th class="docinfo-name">Difficulty:</th><td class="field-body">Beginner</td>
+</tr>
+<tr class="field"><th class="docinfo-name">Keywords:</th><td class="field-body">debugging</td>
+</tr>
+</tbody>
+</table>
+<!-- Definitions of interpreted text roles (classes) for S5/HTML data. -->
+<!-- This data file has been placed in the public domain. -->
+<!-- Colours
+======= -->
+<!-- Text Sizes
+========== -->
+<!-- Display in Slides (Presentation Mode) Only
+========================================== -->
+<!-- Display in Outline Mode Only
+============================ -->
+<!-- Display in Print Only
+===================== -->
+<!-- Display in Handout Mode Only
+============================ -->
+<!-- Incremental Display
+=================== -->
+<p>A discussion of possible strategies used to debug certain kinds of problems.</p>
+<p><a class="reference external" href="http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/">http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/</a></p>
+
+</div>
+<div class="slide" id="overview">
+<h1>Overview</h1>
+<div class="slide-display container">
+<ul class="incremental simple">
+<li>not in-depth about any particular tool</li>
+<li>more about philosophy and approach</li>
+</ul>
+<!--  -->
+<ul class="incremental simple">
+<li>Tools in Your Arsenal</li>
+<li>Causes of Bugs</li>
+<li>The Traceback is Your Friend</li>
+<li>Getting Control When Something Goes Wrong</li>
+<li>A Taxonomy of Bugs and Approaches</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="tools-in-your-arsenal">
+<h1>Tools in Your Arsenal</h1>
+<div class="slide-display container">
+<ul class="incremental simple">
+<li><em>print</em> statement</li>
+<li>Python Debugger (pdb)<ul class="incremental">
+<li>starting in it</li>
+<li>dropping into it at a point</li>
+<li>dropping into it when a problem occurs</li>
+</ul>
+</li>
+</ul>
+<!--  -->
+<ul class="incremental simple">
+<li><em>logging</em> module</li>
+<li>unit and functional tests</li>
+<li>Python Profiler</li>
+<li>the Python prompt</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="what-are-the-causes-of-bugs">
+<h1>What are the Causes of Bugs?</h1>
+<div class="slide-display container">
+<ul class="incremental simple">
+<li>misunderstanding, of the API or requirements</li>
+<li>source code got out of sync</li>
+<li>assumed something about environment</li>
+<li>???</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="resource-management-a-major-cause-of-bugs">
+<h1>Resource Management a Major Cause of Bugs</h1>
+<div class="slide-display container">
+<p>Programs are more than their inputs!</p>
+<ul class="incremental simple">
+<li>disk resources<ul class="incremental">
+<li>out of space, storage or directory</li>
+<li>files in-use/locked</li>
+<li>insufficient permissions</li>
+</ul>
+</li>
+<li>compute resources<ul class="incremental">
+<li>out of memory, swapping</li>
+<li>out of threads</li>
+<li>excessive concurrency usage</li>
+</ul>
+</li>
+<li>network resources<ul class="incremental">
+<li>out of sockets</li>
+<li>DNS, network topology</li>
+<li>restricted lower ports</li>
+<li>packet chunking</li>
+<li>changes in network I/O behavior</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-traceback-is-your-friend">
+<h1>The Traceback is Your Friend</h1>
+<div class="slide-display container">
+<pre class="incremental literal-block">
+Traceback (most recent call last):
+File &quot;c:\twisted\internet\selectreactor.py&quot;, line 146, in _doReadOrWrite
+    why = getattr(selectable, method)()
+</pre>
+<pre class="incremental literal-block">
+File &quot;c:\twisted\internet\tcp.py&quot;, line 463, in doRead
+    return self.protocol.dataReceived(data)
+File &quot;c:\twisted\protocols\basic.py&quot;, line 239, in dataReceived
+    return self.rawDataReceived(data)
+File &quot;c:\twisted\words\protocols\msn.py&quot;, line 676 in rawDataReceived
+    self.gotMessage(m)
+File &quot;c:\twisted\words\protocols\msn.py&quot;, line 699, in gotMessage
+    raise ValueError(&quot;A valid state must be passed in.&quot;)
+</pre>
+<pre class="incremental literal-block">
+ValueError: A valid state must be passed in.
+</pre>
+<ul class="incremental simple">
+<li>true cause not always last</li>
+<li>pathnames may be wrong for .pyc files</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="getting-control-when-something-goes-wrong">
+<h1>Getting Control When Something Goes Wrong</h1>
+<div class="slide-display container">
+<pre class="incremental literal-block">
+$ python -i yourpgm.py
+&gt;&gt;&gt;
+</pre>
+<pre class="incremental literal-block">
+import code
+code.interact(local=locals())
+</pre>
+<pre class="incremental literal-block">
+try:
+    main()  # your program here
+except:
+    import pdb
+    pdb.post_mortem()
+</pre>
+<pre class="incremental literal-block">
+import pdb; pdb.set_trace()
+# your suspect code
+</pre>
+</div>
+</div>
+<div class="slide" id="a-taxonomy-of-bugs">
+<h1>A Taxonomy of Bugs</h1>
+<div class="slide-display container">
+<p>The bug that ...</p>
+<ul class="incremental simple">
+<li>always happens</li>
+<li>sometimes happens</li>
+<li>only happens for someone else</li>
+<li>only happens under load</li>
+<li>makes a program take too long</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-bug-that-always-happens">
+<h1>The Bug that Always Happens</h1>
+<div class="slide-display container">
+<ul class="incremental simple">
+<li>the print statement</li>
+<li>good logging</li>
+<li>single-stepping/breakpointing via pdb</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-bug-that-sometimes-happens">
+<h1>The Bug that Sometimes Happens</h1>
+<div class="slide-display container">
+<ul class="incremental simple">
+<li>reconsider your design assumptions</li>
+<li>especially non-deterministic factors
+like packet chunking, network traffic</li>
+</ul>
+<!--  -->
+<ul class="incremental simple">
+<li>logging</li>
+<li>&quot;short-term&quot; logging for rarely occurring</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-destination-versus-knowing-the-path">
+<h1>The Destination versus Knowing the Path</h1>
+<div class="slide-display container">
+<ul class="incremental">
+<li><p class="first">Unit Tests tell you <strong>Something Went Wrong</strong></p>
+<p>A -&gt; B (but no knowledge of path in-btw)</p>
+</li>
+</ul>
+<!--  -->
+<ul class="incremental">
+<li><p class="first">Logging Tests tell you <strong>Where It Went Wrong</strong></p>
+<p>A -&gt; B (but record of exec path along the way)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-bug-that-happens-only-for-someone-else">
+<h1>The Bug that Happens Only for Someone Else</h1>
+<div class="slide-display container">
+<ul class="simple">
+<li>(timezone story)</li>
+</ul>
+<ul class="incremental simple">
+<li>reconsider your design assumptions<ul>
+<li>time-of-day differences</li>
+<li>network <strong>differences</strong></li>
+<li>more limited storage resources</li>
+<li>disk permission <strong>differences</strong></li>
+<li>concurrency assumptions (stealth apps)</li>
+<li>software installation differences</li>
+</ul>
+</li>
+</ul>
+<pre class="incremental literal-block">
+$ python -v yourpgm.py
+
+(shows where you are importing stuff from)
+</pre>
+<!--  -->
+<ul class="incremental simple">
+<li>logging very important (because you are not there)</li>
+<li><em>especially</em> of your environment</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-bug-that-happens-only-under-load">
+<h1>The Bug that Happens Only Under Load</h1>
+<div class="slide-display container">
+<ul class="incremental">
+<li><p class="first">reconsider your assumptions re <strong>deallocation</strong></p>
+<ul class="incremental simple">
+<li>failure to collect memory garbage</li>
+<li>excessive nesting of stack frames</li>
+<li>delayed temporary file deletion</li>
+<li>exhaustion of threads or locks</li>
+</ul>
+<!--  -->
+<ul class="incremental simple">
+<li>changes in I/O behavior (esp network)</li>
+</ul>
+</li>
+</ul>
+<!--  -->
+<ul class="incremental simple">
+<li>use realistic unit tests</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="the-bug-that-makes-a-program-take-too-long">
+<h1>The Bug that Makes a Program Take Too Long</h1>
+<div class="slide-display container">
+<ul class="simple">
+<li>besides the obvious use of a Python Profiler ...</li>
+</ul>
+<pre class="incremental literal-block">
+import signal
+
+def interrupt_handler(signum, frame):
+    import pdb
+    pdb.set_trace()
+
+# (on OSX, use signal.SIGINT instead of SIGUSR1)
+signal.signal(signal.SIGUSR1, interrupt_handler)
+
+main()
+</pre>
+<pre class="incremental literal-block">
+signal.signal(signal.SIGALRM, interrupt_handler)
+
+signal.alarm(30) # 30-seconds
+do_something_timecritical()
+signal.alarm(0)  # Disable the alarm
+</pre>
+</div>
+</div>
+<div class="slide" id="conclusion">
+<h1>Conclusion</h1>
+<div class="slide-display container">
+<ul class="simple">
+<li>the perfect bug report?</li>
+<li>the worst bug report?</li>
+</ul>
+<p class="huge">Questions?</p>
+<p class="huge"><a class="reference external" href="http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/">http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/</a></p>
+</div>
+<p class="incremental">print &quot;fffff %s&quot; % (a, b, c, d)  # expensive
+needs to be removed; make introduce bugs
+unfilterable, all mixed together
+can't use &quot;short-term&quot; logging very well  (need to show a code example of this)</p>
+<p class="incremental">python -m pdb program.py</p>
+<p class="incremental">formulate hypothese
+use breakpoints/prints/reruns to confirm (risk of rerun showing false fix)</p>
+<p class="incremental">consider using an animated/incremental flowchart to show decision process</p>
+<p class="incremental">when debugging, get more people involved sometimes - they see the bug before you</p>
+<p class="incremental">non-interactive pgms - current approaches work well
+interactive pgms</p>
+<div class="incremental system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Talks/MyTalks/talk-DebuggingStrategies/talk-DebuggingStrategies.txt</tt>, line 357)</p>
+Unexpected indentation.</div>
+<blockquote class="incremental">
+too much logging
+breakpoints would stop shared/async/realtime code!
+risk: the act of inspecting changes the bug</blockquote>
+<p class="incremental">new class of bug: fails when run at full-speed, works when single-stepped</p>
+<dl class="incremental docutils">
+<dt>otrace - saves snapshots ot object states</dt>
+<dd>provides a shell to navigate (and modify?) virtual filesystem</dd>
+</dl>
+<p class="incremental">dynamic decoration versus static decoration</p>
+<dl class="incremental docutils">
+<dt>want to trap the creation of specific Exceptions,</dt>
+<dd>then report who/where it is happening</dd>
+</dl>
+<p class="incremental">(need to colorize my Python source)</p>
+<p class="incremental">(need to check if my immutable example should use __new__ or __init__)</p>
+<p class="incremental">(need graphic of call stack for traceback example)</p>
+<p class="incremental">(need to cover appropriate use of asserts)</p>
+<dl class="incremental docutils">
+<dt>otrace</dt>
+<dd><p class="first">a tracing tool for debugging interactive programs
+a console/dashboard for monitoring production servers
+a teaching tool for exploring innards
+a code patching tool for unit testing</p>
+<p>works with GNU screen utility for detached processes</p>
+<p>not a back-in-time debugger
+similar to OS tracing utility DTrace
+no performance penalty until enabled</p>
+<p>Talk - Designing Your Code for Easy Debugging</p>
+<p>Exercise - show buggy code, ask how to find the bug</p>
+<p class="last">use of [0] instead of [0:]
+use of positional instead of keyword arg
+use of a single element tuple, resulting in a non-tuple
+use of an abstract method
+iterating over a list being modified</p>
+</dd>
+</dl>
+<p>get_x, set_x</p>
+<p>for i in range(5)</p>
+<p>if x, if x == True, if x is not None,</p>
+<p>if is_blank  ==&gt;   if blank:</p>
+<p>use default_dict
+switch map() to list comprehension or generator
+use tuple comparison instead of nested ifs
+avoid excessive use of backslash line continuations
+use tuple unpacking instead of subscripting</p>
+<dl class="docutils">
+<dt>argue: library vs app vs framework, what are the differences?</dt>
+<dd>library never prints but should log
+app may print and should configure logging</dd>
+</dl>
+<p>talk: sorting
+talk: searching
+talk: serialization
+talk: binding
+talk: splitting strings
+talk: joining strings
+idiom: iterating over lines
+talk: what is 'refactoring'
+talk: how to give knobs or pluggable points to an algorithm
+talk: when imperative programming falls short
+talk: CS101 graphs</p>
+<dl class="docutils">
+<dt>compare set of documents in ZODB with set in VCS</dt>
+<dd><p class="first">adjust ZODB to represent what is in VCS
+document deletions
+document additions</p>
+<dl class="docutils">
+<dt>passes it to a parser based on file extension</dt>
+<dd>passes it thru a stack of indexers
+and stores what gets returned persistently</dd>
+<dt>mapping of URLs to content in the ZODB</dt>
+<dd>???
+security controls over access</dd>
+</dl>
+<p>adapters to present content in various formats</p>
+<p>RSS/ATOM feed generators
+- filtered by topic
+- ordered by date
+- triggered by document-added/updated events</p>
+<p class="last">contributions by members
+- comments
+- ranking
+- analytics</p>
+</dd>
+</dl>
+<p>layer a more interactive chat UI for guided teaching</p>
+<p>layer a xanathon UI for document authoring</p>
+<p>github:tswast</p>
+<p>githug: a github appreciation forum?</p>
+<p>spark talks: a URL and a one-sentence abstract, submitted by web</p>
+<p>idiom: be sure to re.compile outside the loop</p>
+<dl class="docutils">
+<dt>lightning talk approaches:</dt>
+<dd>ten things I like/hate about X</dd>
+<dt>need: wristlet laser pointer</dt>
+<dd>able to draw shapes over screen</dd>
+</dl>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Talks/MyTalks/talk-DebuggingStrategies/talk-DebuggingStrategies.txt</tt>, line 480)</p>
+Definition list ends without a blank line; unexpected unindent.</div>
+<p>need: wired to wireless dongle, for easily connecting to devices</p>
+<p>gevent: a greenlet-based async library</p>
+<dl class="docutils">
+<dt>auto-generated knowledge tree</dt>
+<dd>encompassed-by link
+see-also link</dd>
+</dl>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Talks/MyTalks/talk-DebuggingStrategies/talk-DebuggingStrategies.txt</tt>, line 487)</p>
+Definition list ends without a blank line; unexpected unindent.</div>
+<p>ZCatalog versus BTree</p>
+<p>Use the ZODB to store the optimized representation but use the flat textfiles as the authority</p>
+<dl class="docutils">
+<dt>if __name == &quot;__main__&quot;</dt>
+<dd><dl class="first docutils">
+<dt>should contain only log setup and arg parsing</dt>
+<dd><p class="first">but not do actual work; reasons are so code
+can be reused in other places in other ways</p>
+<dl class="last docutils">
+<dt>never store two things in one code block that</dt>
+<dd>might be run separately in another scenario</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">should you ever call sys.exit or just fall off the end?</p>
+</dd>
+<dt>remember: the main module is NOT compiled,</dt>
+<dd>so if it contains a big pgm it will start slowly</dd>
+</dl>
+<p>checkout: flashbake for automatic Git commits</p>
+<p>Kyle Scarmardo - sponsor from whom I borrowed the USB cable</p>
+<!-- XXLocal Variables:
+mode: rst
+mode: outline-minor
+End: -->
+</div>
+</div>
+</body>
+</html>
