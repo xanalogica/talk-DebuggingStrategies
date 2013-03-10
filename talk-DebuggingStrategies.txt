@@ -18,13 +18,6 @@ http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/
 .. |bullet| unicode:: U+02022
 .. footer:: Tau Productions Inc. |bullet| 2012
 
-..
-
-   Given at:
-
-   2012/09/15 PyTexas Regional Conference in College Station, TX
-
-
 Overview
 ========
 
