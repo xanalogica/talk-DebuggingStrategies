@@ -1,0 +1,60 @@
+   python -m pdb program.py
+
+   (need to colorize my Python source)
+   (need to check if my immutable example should use __new__ or __init__)
+   (need graphic of call stack for traceback example)
+   (need to cover appropriate use of asserts)
+
+   print "fffff %s" % (a, b, c, d)  # expensive
+   needs to be removed; make introduce bugs
+   unfilterable, all mixed together
+   can't use "short-term" logging very well  (need to show a code example of this)
+
+
+   formulate hypothese
+   use breakpoints/prints/reruns to confirm (risk of rerun showing false fix)
+
+   consider using an animated/incremental flowchart to show decision process
+
+   when debugging, get more people involved sometimes - they see the bug before you
+
+   non-interactive pgms - current approaches work well
+   interactive pgms
+     too much logging
+     breakpoints would stop shared/async/realtime code!
+     risk: the act of inspecting changes the bug
+
+   new class of bug: fails when run at full-speed, works when single-stepped
+
+   otrace - saves snapshots ot object states
+     provides a shell to navigate (and modify?) virtual filesystem
+
+   dynamic decoration versus static decoration
+
+   want to trap the creation of specific Exceptions,
+     then report who/where it is happening
+
+
+   otrace
+     a tracing tool for debugging interactive programs
+     a console/dashboard for monitoring production servers
+     a teaching tool for exploring innards
+     a code patching tool for unit testing
+
+     works with GNU screen utility for detached processes
+
+     not a back-in-time debugger
+     similar to OS tracing utility DTrace
+     no performance penalty until enabled
+
+
+     Talk - Designing Your Code for Easy Debugging
+
+
+     Exercise - show buggy code, ask how to find the bug
+
+     use of [0] instead of [0:]
+     use of positional instead of keyword arg
+     use of a single element tuple, resulting in a non-tuple
+     use of an abstract method
+     iterating over a list being modified
