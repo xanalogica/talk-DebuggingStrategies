@@ -17,12 +17,16 @@ Playing the Slides
 
 To view the slides, check out this Git repository:
 
-$ git clone https://github.com/xanalogica/talk-DebuggingStrategies.git
+::
+
+  $ git clone https://github.com/xanalogica/talk-DebuggingStrategies.git
 
 and point your web browser (tested with Firefox) at the index.html file:
 
-$ cd talk-DebuggingStrategies
-$ firefox index.html
+::
+
+  $ cd talk-DebuggingStrategies
+  $ firefox index.html
 
 Repeatedly press the <SPACEBAR> to advance to the next slide.
 
