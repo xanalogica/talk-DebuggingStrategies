@@ -327,14 +327,14 @@ ul.auto-toc {
 <meta name="defaultView" content="slideshow" />
 <meta name="controlVis" content="visible" />
 <!-- style sheet links -->
-<script src="/home/caster/themes/talk-dfwuug/slides.js" type="text/javascript"></script>
-<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/slides.css"
+<script src="slidetheme/slides.js" type="text/javascript"></script>
+<link rel="stylesheet" href="slidetheme/slides.css"
       type="text/css" media="projection" id="slideProj" />
-<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/outline.css"
+<link rel="stylesheet" href="slidetheme/outline.css"
       type="text/css" media="screen" id="outlineStyle" />
-<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/print.css"
+<link rel="stylesheet" href="slidetheme/print.css"
       type="text/css" media="print" id="slidePrint" />
-<link rel="stylesheet" href="/home/caster/themes/talk-dfwuug/opera.css"
+<link rel="stylesheet" href="slidetheme/opera.css"
       type="text/css" media="projection" id="operaFix" />
 </head>
 <body>
@@ -431,11 +431,20 @@ ul.auto-toc {
 <div class="slide" id="what-are-the-causes-of-bugs">
 <h1>What are the Causes of Bugs?</h1>
 <div class="slide-display container">
-<ul class="incremental simple">
-<li>misunderstanding, of the API or requirements</li>
-<li>source code got out of sync</li>
-<li>assumed something about environment</li>
-<li>???</li>
+<ul class="incremental">
+<li><p class="first">misunderstanding, of the API or requirements</p>
+</li>
+<li><p class="first">source code got out of sync</p>
+</li>
+<li><p class="first">assumed something about environment</p>
+</li>
+<li><div class="first system-message">
+<p class="system-message-title">System Message: INFO/1 (<tt class="docutils">talk-DebuggingStrategies.rst</tt>, line 74)</p>
+<p>Unexpected possible title overline or transition.
+Treating it as ordinary text because it's so short.</p>
+</div>
+<p>???</p>
+</li>
 </ul>
 </div>
 </div>
@@ -661,152 +670,6 @@ signal.alarm(0)  # Disable the alarm
 <p class="huge">Questions?</p>
 <p class="huge"><a class="reference external" href="http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/">http://www.dfwpython.org/static/jefftalks/DebuggingStrategies/</a></p>
 </div>
-<p class="incremental">print &quot;fffff %s&quot; % (a, b, c, d)  # expensive
-needs to be removed; make introduce bugs
-unfilterable, all mixed together
-can't use &quot;short-term&quot; logging very well  (need to show a code example of this)</p>
-<p class="incremental">python -m pdb program.py</p>
-<p class="incremental">formulate hypothese
-use breakpoints/prints/reruns to confirm (risk of rerun showing false fix)</p>
-<p class="incremental">consider using an animated/incremental flowchart to show decision process</p>
-<p class="incremental">when debugging, get more people involved sometimes - they see the bug before you</p>
-<p class="incremental">non-interactive pgms - current approaches work well
-interactive pgms</p>
-<div class="incremental system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Talks/MyTalks/talk-DebuggingStrategies/talk-DebuggingStrategies.txt</tt>, line 357)</p>
-Unexpected indentation.</div>
-<blockquote class="incremental">
-too much logging
-breakpoints would stop shared/async/realtime code!
-risk: the act of inspecting changes the bug</blockquote>
-<p class="incremental">new class of bug: fails when run at full-speed, works when single-stepped</p>
-<dl class="incremental docutils">
-<dt>otrace - saves snapshots ot object states</dt>
-<dd>provides a shell to navigate (and modify?) virtual filesystem</dd>
-</dl>
-<p class="incremental">dynamic decoration versus static decoration</p>
-<dl class="incremental docutils">
-<dt>want to trap the creation of specific Exceptions,</dt>
-<dd>then report who/where it is happening</dd>
-</dl>
-<p class="incremental">(need to colorize my Python source)</p>
-<p class="incremental">(need to check if my immutable example should use __new__ or __init__)</p>
-<p class="incremental">(need graphic of call stack for traceback example)</p>
-<p class="incremental">(need to cover appropriate use of asserts)</p>
-<dl class="incremental docutils">
-<dt>otrace</dt>
-<dd><p class="first">a tracing tool for debugging interactive programs
-a console/dashboard for monitoring production servers
-a teaching tool for exploring innards
-a code patching tool for unit testing</p>
-<p>works with GNU screen utility for detached processes</p>
-<p>not a back-in-time debugger
-similar to OS tracing utility DTrace
-no performance penalty until enabled</p>
-<p>Talk - Designing Your Code for Easy Debugging</p>
-<p>Exercise - show buggy code, ask how to find the bug</p>
-<p class="last">use of [0] instead of [0:]
-use of positional instead of keyword arg
-use of a single element tuple, resulting in a non-tuple
-use of an abstract method
-iterating over a list being modified</p>
-</dd>
-</dl>
-<p>get_x, set_x</p>
-<p>for i in range(5)</p>
-<p>if x, if x == True, if x is not None,</p>
-<p>if is_blank  ==&gt;   if blank:</p>
-<p>use default_dict
-switch map() to list comprehension or generator
-use tuple comparison instead of nested ifs
-avoid excessive use of backslash line continuations
-use tuple unpacking instead of subscripting</p>
-<dl class="docutils">
-<dt>argue: library vs app vs framework, what are the differences?</dt>
-<dd>library never prints but should log
-app may print and should configure logging</dd>
-</dl>
-<p>talk: sorting
-talk: searching
-talk: serialization
-talk: binding
-talk: splitting strings
-talk: joining strings
-idiom: iterating over lines
-talk: what is 'refactoring'
-talk: how to give knobs or pluggable points to an algorithm
-talk: when imperative programming falls short
-talk: CS101 graphs</p>
-<dl class="docutils">
-<dt>compare set of documents in ZODB with set in VCS</dt>
-<dd><p class="first">adjust ZODB to represent what is in VCS
-document deletions
-document additions</p>
-<dl class="docutils">
-<dt>passes it to a parser based on file extension</dt>
-<dd>passes it thru a stack of indexers
-and stores what gets returned persistently</dd>
-<dt>mapping of URLs to content in the ZODB</dt>
-<dd>???
-security controls over access</dd>
-</dl>
-<p>adapters to present content in various formats</p>
-<p>RSS/ATOM feed generators
-- filtered by topic
-- ordered by date
-- triggered by document-added/updated events</p>
-<p class="last">contributions by members
-- comments
-- ranking
-- analytics</p>
-</dd>
-</dl>
-<p>layer a more interactive chat UI for guided teaching</p>
-<p>layer a xanathon UI for document authoring</p>
-<p>github:tswast</p>
-<p>githug: a github appreciation forum?</p>
-<p>spark talks: a URL and a one-sentence abstract, submitted by web</p>
-<p>idiom: be sure to re.compile outside the loop</p>
-<dl class="docutils">
-<dt>lightning talk approaches:</dt>
-<dd>ten things I like/hate about X</dd>
-<dt>need: wristlet laser pointer</dt>
-<dd>able to draw shapes over screen</dd>
-</dl>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Talks/MyTalks/talk-DebuggingStrategies/talk-DebuggingStrategies.txt</tt>, line 480)</p>
-Definition list ends without a blank line; unexpected unindent.</div>
-<p>need: wired to wireless dongle, for easily connecting to devices</p>
-<p>gevent: a greenlet-based async library</p>
-<dl class="docutils">
-<dt>auto-generated knowledge tree</dt>
-<dd>encompassed-by link
-see-also link</dd>
-</dl>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Talks/MyTalks/talk-DebuggingStrategies/talk-DebuggingStrategies.txt</tt>, line 487)</p>
-Definition list ends without a blank line; unexpected unindent.</div>
-<p>ZCatalog versus BTree</p>
-<p>Use the ZODB to store the optimized representation but use the flat textfiles as the authority</p>
-<dl class="docutils">
-<dt>if __name == &quot;__main__&quot;</dt>
-<dd><dl class="first docutils">
-<dt>should contain only log setup and arg parsing</dt>
-<dd><p class="first">but not do actual work; reasons are so code
-can be reused in other places in other ways</p>
-<dl class="last docutils">
-<dt>never store two things in one code block that</dt>
-<dd>might be run separately in another scenario</dd>
-</dl>
-</dd>
-</dl>
-<p class="last">should you ever call sys.exit or just fall off the end?</p>
-</dd>
-<dt>remember: the main module is NOT compiled,</dt>
-<dd>so if it contains a big pgm it will start slowly</dd>
-</dl>
-<p>checkout: flashbake for automatic Git commits</p>
-<p>Kyle Scarmardo - sponsor from whom I borrowed the USB cable</p>
 <!-- XXLocal Variables:
 mode: rst
 mode: outline-minor
